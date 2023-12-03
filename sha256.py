@@ -3,11 +3,11 @@ def is_palindrome(test_param: str) -> bool:
 
 def translate(message):
     """Translates strings into binary number returned as a list of integers"""
-    chars = [ord(c) for c in message] # ord translates string to Unicode value
+    chars = [ord(c) for c in message]  # ord translates string to Unicode value
 
     bytes = []
     for char in chars:
-        bytes.append(bin(char)[2:].zfill(8)) # replacing '0b' indicator with 0 
+        bytes.append(bin(char)[2:].zfill(8))  # replacing '0b' indicator with 0 
 
     # returning the value as the list of integers
     bitlist = []
@@ -18,22 +18,22 @@ def translate(message):
 
 def bin2Hex(val):
     """For presenting hash values in hexadecimal notation, takes a list of 32 bits as an input"""
-    val = ''.join([str(x) for x in val])
+    val = "".join([str(x) for x in val])
 
     bins = []
     for d in range(0, len(val), 4):
-        bins.append('0b' + val[d:d+4]) # converting the list back to '0bx' format
+        bins.append("0b" + val[d:d+4])  # converting the list back to '0bx' format
 
-    hexes = ''
+    hexes = "" 
     for b in bins:
         hexes += hex(int(b, 2))[2:]
     return hexes
 
-def zerosFill(bits, length=8, endian='LE'):
+def zerosFill(bits, length=8, endian="LE"):
     """Useful for formatting data for usage with Python methods"""
     l = len(bits)
 
-    if endian == 'LE':
+    if endian == "LE":
         for _ in range(l, length):
             bits.append(0)
     else:
@@ -46,5 +46,6 @@ def divider(bits, chunk_length=8):
     """Dividing the message into desired chunks"""
     chunked = []
     for b in range(0, len(bits), chunk_length):
-        chunked.append(bits[b:b+chunk_length])
+        chunked.append(bits[b : b+chunk_length])
     return chunked
+

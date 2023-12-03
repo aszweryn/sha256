@@ -8,7 +8,11 @@ pip install -r requirements.txt
 ## Running
 
 CLI tool:
-`python sha256.py <arg>`
+```
+python sha256.py <arg>
+```
 
 Tests:
-`pytest`
+```
+pytest
+```

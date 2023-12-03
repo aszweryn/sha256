@@ -62,5 +62,5 @@ def initialize(values):
         word = []
         for b in binary:
             word.append(int(b))
-        words.append(zerosFill(word, 32, 'BE'))
+        words.append(zerosFill(word, 32, "BE"))
     return words

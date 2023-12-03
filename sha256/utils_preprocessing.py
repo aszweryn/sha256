@@ -28,6 +28,13 @@ def bin2Hex(val):
     return hexes
 
 
+def bin2Int(val):
+    """Converts a 32-bit list of binary values into a single 32-bit integer"""
+    bin_String = "".join([str(x) for x in val])
+    decimal = int(bin_String, 2)
+    return decimal
+
+
 def zerosFill(bits, length=8, endian="LE"):
     """Useful for formatting data for usage with Python methods"""
     l = len(bits)

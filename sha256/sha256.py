@@ -11,10 +11,13 @@ def print_constants():
 
 
 def hash(inp: str) -> str:
-    """Main function used to hash given string with SHA-256 cryptographic algorithm. It returns hashed version of the input string.
+    """Main function used to hash given string with SHA-256 cryptographic algorithm.
 
     Args:
         inp (str): Input string to be hashed.
+        
+    Returns:
+        str: Hashed version of the input string.
     """
 
     # todo: main loop goes here

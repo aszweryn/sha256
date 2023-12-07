@@ -1,5 +1,5 @@
 import pytest
-from sha256.sha256 import is_palindrome
+from sha256 import sha256
 
 
 @pytest.mark.parametrize(
@@ -15,4 +15,8 @@ from sha256.sha256 import is_palindrome
     ],
 )
 def test_is_palindrome(maybe_palindrome, expected_result):
-    assert is_palindrome(maybe_palindrome) == expected_result
+    assert sha256.is_palindrome(maybe_palindrome) == expected_result
+
+
+def test_is_hash_todo():
+    assert sha256.hash("testing") == "todo"

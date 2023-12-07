@@ -9,7 +9,8 @@ pip install -r requirements.txt
 
 CLI tool:
 ```
-python sha256.py <arg>
+python app_cli.py --help
+python app_cli.py textToBeHashed
 ```
 
 Tests:

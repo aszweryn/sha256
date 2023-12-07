@@ -35,35 +35,17 @@ def bin2Int(val):
     return decimal
 
 
-def zerosFill(bits, length=8, endian="LE"):
-    """Useful for formatting data for usage with Python methods"""
-    l = len(bits)
-
-    if endian == "LE":
-        for _ in range(l, length):
-            bits.append(0)
-    else:
-        while l < length:
-            bits.insert(0, 0)
-            l = len(bits)
-    return bits
-
-
-def divider(bits, chunk_length=8):
-    """Dividing the message into desired chunks"""
-    chunked = []
-    for b in range(0, len(bits), chunk_length):
-        chunked.append(bits[b : b + chunk_length])
-    return chunked
-
-
-def initialize(values):
-    """Initializing the algorithm and converting values into a list of bits"""
-    bins = [bin(int(v, 16))[2:] for v in values]
-    words = []
-    for binary in bins:
-        word = []
-        for b in binary:
-            word.append(int(b))
-        words.append(zerosFill(word, 32, "BE"))
-    return words
+def padding(mlen):
+    """Generating the padding for the SHA-256.
+    It ensures that the input message length is correct before applying the hash algorithm
+    """
+    mdi = (
+        mlen & 0x3F
+    )  # get the message digest index - used for determining the position of the last byte
+    length = (mlen << 3).to_bytes(
+        8, "big"
+    )  # calculate the length of the original message
+    padlength = (
+        55 - mdi if mdi < 56 else 119 - mdi
+    )  # use mdi to calculate required padding length
+    return b"\x80" + b"\x00" * padlength + length  # construct and return the padding

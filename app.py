@@ -1,3 +1,5 @@
 from sha256 import sha256
 
-sha256.print_constants()
+# for dev purposes
+hashed = sha256.hash("textToBeHashed")
+print(hashed)

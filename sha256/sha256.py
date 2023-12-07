@@ -15,7 +15,7 @@ def hash(inp: str) -> str:
 
     Args:
         inp (str): Input string to be hashed.
-        
+
     Returns:
         str: Hashed version of the input string.
     """

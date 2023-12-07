@@ -1,5 +1,5 @@
 import pytest
-from sha256 import is_palindrome
+from sha256.sha256 import is_palindrome
 
 
 @pytest.mark.parametrize(

@@ -1,5 +1,5 @@
 import pytest
-from sha256.utils_preprocessing import translate, bin2Hex, bin2Int, padding
+from sha256.preprocessing import translate, bin2Hex, bin2Int, padding
 
 def test_translate():
     result = translate("Hi")

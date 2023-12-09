@@ -7,12 +7,13 @@ from sha256.opr import ch, maj, rotr
     [
         (0x00000010, 4, 0x00000001),
         (0x00000001, 4, 0x10000000),
-        (0x000000f0, 4, 0x0000000f),
+        (0x000000F0, 4, 0x0000000F),
     ],
 )
 def test_rotr(input_number, rotate_times, expected_result):
     result = rotr(input_number, rotate_times)
     assert result == expected_result
+
 
 @pytest.mark.parametrize(
     "a, b, c, expected_result",

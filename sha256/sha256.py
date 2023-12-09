@@ -39,7 +39,7 @@ def main_loop(c, hash):
         hash[i] = (x + y) & MAX_32
 
 
-def update(m, mlen, buf, hash):
+def update(m: bytes, mlen, buf, hash):
     """Update hash state with input message.
 
     Args:
@@ -59,6 +59,7 @@ def update(m, mlen, buf, hash):
 
     for i in range(0, len(m) // 64):
         main_loop(m[64 * i : 64 * (i + 1)], hash)
+        print(i)
 
     buf = m[len(m) - (len(m) % 64) :]
 
@@ -104,7 +105,13 @@ def hash(inp: str) -> str:
     Returns:
         str: Hashed version of the input string.
     """
+    # Example message
+    user_input = inp
 
-    # todo: main loop goes here
+    # Compute SHA-256 hash
+    result = hex(len(user_input), b'', K)
 
-    return "todo"
+    # Print the result to the CLI
+    # print("SHA-256 Hex Output:", result)
+
+    return result

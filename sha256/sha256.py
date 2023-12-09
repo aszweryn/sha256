@@ -1,40 +1,32 @@
 from sha256 import const
 from sha256.const import MAX_32
 from sha256.opr import *
+from sha256.preprocessing import padding
 
 
 def main_loop(c, hash):
-    """Implemented main loop acording to the NIST documentation.
+    """Implemented main loop according to the NIST documentation.
 
     Args:
-        c: _512-bit data block_
-        hash: _current hash state_
+        c (list): 512-bit data block
+        hash (list): Current hash state
     """
-    w = [0] * 64  # generate a variable for storing an array of 64 words
-    w[0:16] = [
-        int.from_bytes(c[i : i + 4], "big") for i in range(0, len(c), 4)
-    ]  # replace first 16 words with integers obtained from block 'c'
+    w = [0] * 64
+    w[0:16] = [int.from_bytes(c[i : i + 4], "big") for i in range(0, len(c), 4)]
 
-    # generate additional words
     for i in range(16, 64):
         sig0 = sigma_zero(w[i - 15])
         sig1 = sigma_one(w[i - 2])
         w[i] = (w[i - 16] + sig0 + w[i - 7] + sig1) & MAX_32
 
-    # initialize variables specified in NIST documentation
     a, b, c, d, e, f, g, h = hash
 
-    # main loop
     for i in range(64):
-        # calculating temporary variables
         sum0 = sum_zero(a)
         t2 = sum0 + maj(a, b, c)
         sum1 = sum_one(e)
-        t1 = (
-            h + sum1 + ch(e, f, g) + const.K[i] + w[i]
-        )  # using value of a specific hash here
+        t1 = h + sum1 + ch(e, f, g) + const.K[i] + w[i]
 
-        # reassigning values
         h = g
         g = f
         f = e
@@ -44,12 +36,22 @@ def main_loop(c, hash):
         b = a
         a = (t1 + t2) & MAX_32
 
-    # updating the values after the computation
     for i, (x, y) in enumerate(zip(hash, [a, b, c, d, e, f, g, h])):
         hash[i] = (x + y) & MAX_32
 
 
 def update(m, mlen, buf, hash):
+    """Update hash state with input message.
+
+    Args:
+        m (bytes): Input message
+        mlen (int): Message length
+        buf (bytes): Buffer for partial block
+        hash (list): Current hash state
+
+    Returns:
+        tuple: Updated message length and buffer
+    """
     if m is None or len(m) == 0:
         return mlen, buf
 
@@ -57,11 +59,41 @@ def update(m, mlen, buf, hash):
     m = buf + m
 
     for i in range(0, len(m) // 64):
-       main_loop(m[64 * i: 64 * (i + 1)], hash)
+        main_loop(m[64 * i : 64 * (i + 1)], hash)
 
-    buf = m[len(m) - (len(m) % 64):]
+    buf = m[len(m) - (len(m) % 64) :]
 
     return mlen, buf
+
+
+def digest(mlen, buf, hash):
+    """Get the hash digest.
+
+    Args:
+        mlen (int): Message length
+        buf (bytes): Buffer for partial block
+        hash (list): Current hash state
+
+    Returns:
+        bytes: Hash digest
+    """
+    mlen, buf = update(padding(mlen), mlen, buf, hash)
+    return b"".join(x.to_bytes(4, "big") for x in hash[:8])
+
+
+def hex(mlen, buf, hash):
+    """Get the hex representation of the hash digest.
+
+    Args:
+        mlen (int): Message length
+        buf (bytes): Buffer for partial block
+        hash (list): Current hash state
+
+    Returns:
+        str: Hex representation of the hash digest
+    """
+    tab = "0123456789abcdef"
+    return "".join(tab[b >> 4] + tab[b & 0xF] for b in digest(mlen, buf, hash))
 
 
 def hash(inp: str) -> str:

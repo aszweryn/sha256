@@ -1,5 +1,4 @@
-from sha256 import const
-from sha256.const import MAX_32
+from sha256.const import *
 from sha256.opr import *
 from sha256.preprocessing import padding
 
@@ -25,7 +24,7 @@ def main_loop(c, hash):
         sum0 = sum_zero(a)
         t2 = sum0 + maj(a, b, c)
         sum1 = sum_one(e)
-        t1 = h + sum1 + ch(e, f, g) + const.K[i] + w[i]
+        t1 = h + sum1 + ch(e, f, g) + K[i] + w[i]
 
         h = g
         g = f

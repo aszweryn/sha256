@@ -31,3 +31,36 @@ def maj(a: int, b: int, c: int) -> int:
     * NOTE: Input and result should be treated as a 32bit word.
     """
     return (a & b) ^ (a & c) ^ (b & c)
+
+
+# There are also SHA-256 specific unary operators:
+def sum_zero(a: int) -> int:
+    """
+    Bitwise unary operator specific for sha256 calculations.
+    * NOTE: Input and result should be treated as a 32bit word.
+    """
+    return rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22)
+
+
+def sum_one(a: int) -> int:
+    """
+    Bitwise unary operator specific for sha256 calculations.
+    * NOTE: Input and result should be treated as a 32bit word.
+    """
+    return rotr(a, 6) ^ rotr(a, 11) ^ rotr(a, 25)
+
+
+def sigma_zero(a: int) -> int:
+    """
+    Bitwise unary operator specific for sha256 calculations.
+    * NOTE: Input and result should be treated as a 32bit word.
+    """
+    return rotr(a, 7) ^ rotr(a, 18) ^ (a >> 3)
+
+
+def sigma_one(a: int) -> int:
+    """
+    Bitwise unary operator specific for sha256 calculations.
+    * NOTE: Input and result should be treated as a 32bit word.
+    """
+    return rotr(a, 17) ^ rotr(a, 19) ^ (a >> 10)

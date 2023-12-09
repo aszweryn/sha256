@@ -71,3 +71,17 @@ def mainLoop(c, hash):
     # updating the values after the computation
     for i, (x, y) in enumerate(zip(hash, [a, b, c, d, e, f, g, h])):
         hash[i] = (x + y) & MAX_32
+
+def update(m, mlen, buf, hash):
+    if m is None or len(m) == 0:
+        return mlen, buf
+
+    mlen += len(m)
+    m = buf + m
+
+    for i in range(0, len(m) // 64):
+       mainLoop(m[64 * i: 64 * (i + 1)], hash)
+
+    buf = m[len(m) - (len(m) % 64):]
+
+    return mlen, buf

@@ -42,7 +42,3 @@ def get_hash_test_params(test_inputs: list) -> list:
 )
 def test_hash_with_sha256(input_string, expected_result):
     assert sha256.hash(input_string) == expected_result
-
-
-def test_is_hash_todo():
-    assert sha256.hash("testing") == "todo"

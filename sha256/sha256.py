@@ -105,13 +105,14 @@ def hash(inp: str) -> str:
     Returns:
         str: Hashed version of the input string.
     """
-    # Example message
-    user_input = inp
+    # Initialize the variables
+    mlen = 0
+    buf = b""
+
+    # Update hash state
+    mlen, buf = update(inp.encode("utf-8"), mlen, buf, INIT_HASH)
 
     # Compute SHA-256 hash
-    result = hex(len(user_input), b'', K)
-
-    # Print the result to the CLI
-    # print("SHA-256 Hex Output:", result)
+    result = hex(mlen, buf, INIT_HASH)
 
     return result

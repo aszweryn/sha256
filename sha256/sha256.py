@@ -1,4 +1,4 @@
-from sha256.const import *
+from sha256.const import K, INIT_HASH, MAX_32
 from sha256.opr import *
 from sha256.preprocessing import padding
 
@@ -57,9 +57,9 @@ def update(m: bytes, mlen, buf, hash):
     mlen += len(m)
     m = buf + m
 
+    # 64*8 = 512, how many full 64 byte blocks in message
     for i in range(0, len(m) // 64):
         main_loop(m[64 * i : 64 * (i + 1)], hash)
-        print(i)
 
     buf = m[len(m) - (len(m) % 64) :]
 
@@ -103,16 +103,17 @@ def hash(inp: str) -> str:
         inp (str): Input string to be hashed.
 
     Returns:
-        str: Hashed version of the input string.
+        str: Hashed version of the input string (in hexadecimal string representation).
     """
     # Initialize the variables
     mlen = 0
     buf = b""
+    init_hash = INIT_HASH.copy()
 
     # Update hash state
-    mlen, buf = update(inp.encode("utf-8"), mlen, buf, INIT_HASH)
+    mlen, buf = update(inp.encode("utf-8"), mlen, buf, init_hash)
 
     # Compute SHA-256 hash
-    result = hex(mlen, buf, INIT_HASH)
+    result = hex(mlen, buf, init_hash)
 
     return result

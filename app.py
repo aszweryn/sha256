@@ -1,5 +1,6 @@
 from sha256 import sha256
 
 # for dev purposes
-hashed = sha256.hash("textToBeHashed")
+inp = input("Please enter your text to be hashed: ")
+hashed = sha256.hash(inp)
 print(hashed)

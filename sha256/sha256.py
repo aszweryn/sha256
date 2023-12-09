@@ -1,33 +1,9 @@
 from sha256 import const
 from sha256.const import MAX_32
-from sha256.opr import rotr, ch, maj
+from sha256.opr import *
 
 
-def is_palindrome(test_param: str) -> bool:
-    return True
-
-
-def print_constants():
-    print(const.INIT_HASH)
-    print(const.K)
-
-
-def hash(inp: str) -> str:
-    """Main function used to hash given string with SHA-256 cryptographic algorithm.
-
-    Args:
-        inp (str): Input string to be hashed.
-
-    Returns:
-        str: Hashed version of the input string.
-    """
-
-    # todo: main loop goes here
-
-    return "todo"
-
-
-def mainLoop(c, hash):
+def main_loop(c, hash):
     """Implemented main loop acording to the NIST documentation.
 
     Args:
@@ -41,9 +17,9 @@ def mainLoop(c, hash):
 
     # generate additional words
     for i in range(16, 64):
-        s0 = rotr(w[i - 15], 7, MAX_32) ^ rotr(w[i - 15], 18, MAX_32) ^ (w[i - 15] >> 3)
-        s1 = rotr(w[i - 2], 17, MAX_32) ^ rotr(w[i - 2], 19, MAX_32) ^ (w[i - 2] >> 10)
-        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) & MAX_32
+        sig0 = sigma_zero(w[i - 15])
+        sig1 = sigma_one(w[i - 2])
+        w[i] = (w[i - 16] + sig0 + w[i - 7] + sig1) & MAX_32
 
     # initialize variables specified in NIST documentation
     a, b, c, d, e, f, g, h = hash
@@ -51,11 +27,11 @@ def mainLoop(c, hash):
     # main loop
     for i in range(64):
         # calculating temporary variables
-        s0 = rotr(a, 2, MAX_32) ^ rotr(a, 13, MAX_32) ^ rotr(a, 22, MAX_32)
-        t2 = s0 + maj(a, b, c)
-        s1 = rotr(e, 6, MAX_32) ^ rotr(e, 11, MAX_32) ^ rotr(e, 25, MAX_32)
+        sum0 = sum_zero(a)
+        t2 = sum0 + maj(a, b, c)
+        sum1 = sum_one(e)
         t1 = (
-            h + s1 + ch(e, f, g) + const.K[i] + w[i]
+            h + sum1 + ch(e, f, g) + const.K[i] + w[i]
         )  # using value of a specific hash here
 
         # reassigning values
@@ -72,6 +48,7 @@ def mainLoop(c, hash):
     for i, (x, y) in enumerate(zip(hash, [a, b, c, d, e, f, g, h])):
         hash[i] = (x + y) & MAX_32
 
+
 def update(m, mlen, buf, hash):
     if m is None or len(m) == 0:
         return mlen, buf
@@ -80,8 +57,23 @@ def update(m, mlen, buf, hash):
     m = buf + m
 
     for i in range(0, len(m) // 64):
-       mainLoop(m[64 * i: 64 * (i + 1)], hash)
+       main_loop(m[64 * i: 64 * (i + 1)], hash)
 
     buf = m[len(m) - (len(m) % 64):]
 
     return mlen, buf
+
+
+def hash(inp: str) -> str:
+    """Main function used to hash given string with SHA-256 cryptographic algorithm.
+
+    Args:
+        inp (str): Input string to be hashed.
+
+    Returns:
+        str: Hashed version of the input string.
+    """
+
+    # todo: main loop goes here
+
+    return "todo"

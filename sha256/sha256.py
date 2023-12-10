@@ -1,14 +1,30 @@
 from sha256.const import K, INIT_HASH, MAX_32
 from sha256.opr import *
-from sha256.preprocessing import padding
 
 
-def main_loop(c, hash):
-    """Implemented main loop according to the NIST documentation.
+def padding(mlen: int) -> bytes:
+    """Generate padding for SHA-256.
+
+    Ensures that the input message length is correct before applying the hash algorithm.
 
     Args:
-        c (list): 512-bit data block
-        hash (list): Current hash state
+        mlen (int): Message length.
+
+    Returns:
+        bytes: Padding for SHA-256.
+    """
+    mdi = mlen & 0x3F
+    length = (mlen << 3).to_bytes(8, "big")
+    padlength = 55 - mdi if mdi < 56 else 119 - mdi
+    return b"\x80" + b"\x00" * padlength + length
+
+
+def process(c: list, hash: list):
+    """Implement the main loop according to the NIST documentation.
+
+    Args:
+        c (list): 512-bit data block.
+        hash (list): Current hash state.
     """
     w = [0] * 64
     w[0:16] = [int.from_bytes(c[i : i + 4], "big") for i in range(0, len(c), 4)]
@@ -39,17 +55,17 @@ def main_loop(c, hash):
         hash[i] = (x + y) & MAX_32
 
 
-def update(m: bytes, mlen, buf, hash):
-    """Update hash state with input message.
+def update(m: bytes, mlen: int, buf: bytes, hash: list) -> tuple:
+    """Update the hash state with the input message.
 
     Args:
-        m (bytes): Input message
-        mlen (int): Message length
-        buf (bytes): Buffer for partial block
-        hash (list): Current hash state
+        m (bytes): Input message.
+        mlen (int): Message length.
+        buf (bytes): Buffer for a partial block.
+        hash (list): Current hash state.
 
     Returns:
-        tuple: Updated message length and buffer
+        tuple: Updated message length and buffer.
     """
     if m is None or len(m) == 0:
         return mlen, buf
@@ -57,47 +73,47 @@ def update(m: bytes, mlen, buf, hash):
     mlen += len(m)
     m = buf + m
 
-    # 64*8 = 512, how many full 64 byte blocks in message
+    # Process full 64-byte (512-bit) blocks in the message
     for i in range(0, len(m) // 64):
-        main_loop(m[64 * i : 64 * (i + 1)], hash)
+        process(m[64 * i : 64 * (i + 1)], hash)
 
     buf = m[len(m) - (len(m) % 64) :]
 
     return mlen, buf
 
 
-def digest(mlen, buf, hash):
+def digest(mlen: int, buf: bytes, hash: list) -> bytes:
     """Get the hash digest.
 
     Args:
-        mlen (int): Message length
-        buf (bytes): Buffer for partial block
-        hash (list): Current hash state
+        mlen (int): Message length.
+        buf (bytes): Buffer for a partial block.
+        hash (list): Current hash state.
 
     Returns:
-        bytes: Hash digest
+        bytes: Hash digest.
     """
     mlen, buf = update(padding(mlen), mlen, buf, hash)
     return b"".join(x.to_bytes(4, "big") for x in hash[:8])
 
 
-def hex(mlen, buf, hash):
-    """Get the hex representation of the hash digest.
+def hex(mlen: int, buf: bytes, hash: list) -> str:
+    """Get the hexadecimal representation of the hash digest.
 
     Args:
-        mlen (int): Message length
-        buf (bytes): Buffer for partial block
-        hash (list): Current hash state
+        mlen (int): Message length.
+        buf (bytes): Buffer for a partial block.
+        hash (list): Current hash state.
 
     Returns:
-        str: Hex representation of the hash digest
+        str: Hexadecimal representation of the hash digest.
     """
     tab = "0123456789abcdef"
     return "".join(tab[b >> 4] + tab[b & 0xF] for b in digest(mlen, buf, hash))
 
 
 def hash(inp: str) -> str:
-    """Main function used to hash given string with SHA-256 cryptographic algorithm.
+    """Hash a given string with the SHA-256 cryptographic algorithm.
 
     Args:
         inp (str): Input string to be hashed.
@@ -105,15 +121,12 @@ def hash(inp: str) -> str:
     Returns:
         str: Hashed version of the input string (in hexadecimal string representation).
     """
-    # Initialize the variables
     mlen = 0
     buf = b""
     init_hash = INIT_HASH.copy()
 
-    # Update hash state
     mlen, buf = update(inp.encode("utf-8"), mlen, buf, init_hash)
 
-    # Compute SHA-256 hash
     result = hex(mlen, buf, init_hash)
 
     return result

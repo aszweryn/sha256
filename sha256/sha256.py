@@ -1,9 +1,24 @@
 from sha256.const import K, INIT_HASH, MAX_32
 from sha256.opr import *
-from sha256.preprocessing import padding
 
 
-def main_loop(c: list, hash: list):
+def padding(mlen: int):
+    """Generating the padding for the SHA-256.
+    It ensures that the input message length is correct before applying the hash algorithm
+    """
+    mdi = (
+        mlen & 0x3F
+    )  # get the message digest index - used for determining the position of the last byte
+    length = (mlen << 3).to_bytes(
+        8, "big"
+    )  # calculate the length of the original message
+    padlength = (
+        55 - mdi if mdi < 56 else 119 - mdi
+    )  # use mdi to calculate required padding length
+    return b"\x80" + b"\x00" * padlength + length  # construct and return the padding
+
+
+def process(c: list, hash: list):
     """Implemented main loop according to the NIST documentation.
 
     Args:
@@ -59,7 +74,7 @@ def update(m: bytes, mlen: int, buf: bytes, hash: list):
 
     # 64*8 = 512, how many full 64 byte blocks in message
     for i in range(0, len(m) // 64):
-        main_loop(m[64 * i : 64 * (i + 1)], hash)
+        process(m[64 * i : 64 * (i + 1)], hash)
 
     buf = m[len(m) - (len(m) % 64) :]
 

@@ -3,7 +3,7 @@ from sha256.opr import *
 from sha256.preprocessing import padding
 
 
-def main_loop(c, hash):
+def main_loop(c: list, hash: list):
     """Implemented main loop according to the NIST documentation.
 
     Args:
@@ -39,7 +39,7 @@ def main_loop(c, hash):
         hash[i] = (x + y) & MAX_32
 
 
-def update(m: bytes, mlen, buf, hash):
+def update(m: bytes, mlen: int, buf: bytes, hash: list):
     """Update hash state with input message.
 
     Args:
@@ -66,7 +66,7 @@ def update(m: bytes, mlen, buf, hash):
     return mlen, buf
 
 
-def digest(mlen, buf, hash):
+def digest(mlen: int, buf: bytes, hash: list):
     """Get the hash digest.
 
     Args:
@@ -81,7 +81,7 @@ def digest(mlen, buf, hash):
     return b"".join(x.to_bytes(4, "big") for x in hash[:8])
 
 
-def hex(mlen, buf, hash):
+def hex(mlen: int, buf: bytes, hash: list):
     """Get the hex representation of the hash digest.
 
     Args:

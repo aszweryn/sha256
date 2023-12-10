@@ -1,4 +1,4 @@
-def padding(mlen):
+def padding(mlen: int):
     """Generating the padding for the SHA-256.
     It ensures that the input message length is correct before applying the hash algorithm
     """

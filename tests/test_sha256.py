@@ -13,7 +13,7 @@ HASH_TEST = [
     "python",
     "987654321",
     "abcdefghijklmnopqrstuvwxyz1234567890",
-    "[" * (32600) # 32600 length input 
+    "[" * (32600),  # 32600 length input
 ]
 
 
@@ -36,7 +36,6 @@ def get_hash_test_params(test_inputs: list) -> list:
     for inp in test_inputs:
         # param = pair of input_string and expected_result
         param = (inp, get_ref_hashed(inp))
-        print(param)
         params.append(param)
     return params
 

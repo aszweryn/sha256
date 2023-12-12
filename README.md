@@ -15,5 +15,5 @@ python app_cli.py textToBeHashed
 
 Tests:
 ```
-pytest
+python -m pytest
 ```

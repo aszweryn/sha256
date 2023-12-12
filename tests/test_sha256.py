@@ -3,6 +3,9 @@ import hashlib
 from sha256 import sha256
 
 HASH_TEST = [
+    "",
+    " ",
+    "i",
     "Hello, World!",
     "123456",
     "ECRYP CRYPT testing",
@@ -10,6 +13,7 @@ HASH_TEST = [
     "python",
     "987654321",
     "abcdefghijklmnopqrstuvwxyz1234567890",
+    "[" * (32600),  # 32600 length input
 ]
 
 

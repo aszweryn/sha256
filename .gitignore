@@ -1,4 +1,5 @@
 env/
+results/
 
 # Byte-compiled / optimized / DLL files
 .pytest_cache/

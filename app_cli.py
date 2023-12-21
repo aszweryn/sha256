@@ -1,6 +1,6 @@
 import argparse
-import sys
-import os
+import sys, os
+from config import DIR_RESULTS
 from sha256 import sha256
 
 
@@ -25,10 +25,9 @@ def parse_args(arguments: list) -> argparse.Namespace:
 def hash_and_print(inp: str, output_file=None):
     hashed = sha256.hash(inp)
     if output_file:
-        dir_results = os.path.abspath("./results")
-        if not os.path.exists(dir_results):
-            os.makedirs(dir_results)
-        with open(os.path.join(dir_results, output_file), "w") as file:
+        if not os.path.exists(DIR_RESULTS):
+            os.makedirs(DIR_RESULTS)
+        with open(os.path.join(DIR_RESULTS, output_file), "w") as file:
             file.write(hashed)
         print(f"Hash result has been written to results/{output_file}")
     else:

@@ -37,9 +37,7 @@ def hash_from_file(input_filepath: str, output_file: str):
             input_content = file.read().strip()
             hash_and_print(input_content, output_file)
     except FileNotFoundError:
-        raise FileNotFoundError(
-            f"File with input string not found - {input_filepath}"
-        )
+        raise FileNotFoundError(f"File with input string not found - {input_filepath}")
 
 
 if __name__ == "__main__":

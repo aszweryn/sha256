@@ -1,5 +1,5 @@
-from sha256.const import K, INIT_HASH, MAX_32
-from sha256.opr import *
+from .const import K, INIT_HASH, MAX_32
+from .opr import *
 
 
 def padding(mlen: int) -> bytes:
